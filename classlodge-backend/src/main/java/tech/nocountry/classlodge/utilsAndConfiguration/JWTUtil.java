@@ -15,7 +15,7 @@ public class JWTUtil {
     private static String SECRET_KEY = "Cl1ssL4dg2";
     private static Algorithm ALGORITHM = Algorithm.HMAC256(SECRET_KEY);
     //Metodo para crear al token
-    public String create(String userName){
+    public String create(String userName, String fullName, String role){
         return JWT.create()
                 //Se inyecta el nombre de usuario
                 .withSubject(userName)
@@ -24,6 +24,10 @@ public class JWTUtil {
                 .withIssuedAt(new Date())
                 //Se establece la duracion del token en 15 dias desde su creacion
                 .withExpiresAt(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(15)))
+                //Se agregan los campos personalizados al token
+                .withClaim("email", userName)
+                .withClaim("fullName", fullName)
+                .withClaim("role", role)
                 .sign(ALGORITHM);
     }
 

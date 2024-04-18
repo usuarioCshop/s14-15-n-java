@@ -10,11 +10,13 @@ import java.util.List;
 
 public interface IUserNoteService {
 
-    UserNote saveUserNote(UserNote userNote);
+    UserNote createUserNote(UserNote userNote);
 
-    void modifyUserNote(UserNote userNote);
+    Boolean exists(Integer noteId);
 
-    List<UserNoteDTO> getAllUserNoteById(Integer contentId);
+    UserNote modifyUserNote(Integer noteId, UserNoteDTO userNoteDTO);
+
+    List<UserNoteDTO> getAllUserNoteById(Integer couseId);
 
     UserNoteDTO getUserNoteById(Integer noteId);
 

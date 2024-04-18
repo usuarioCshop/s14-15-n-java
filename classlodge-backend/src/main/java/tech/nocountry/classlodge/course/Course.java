@@ -8,7 +8,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import tech.nocountry.classlodge.comment.Comment;
+import tech.nocountry.classlodge.courseContent.CourseContent;
 
+import java.util.List;
 
 
 @Entity
@@ -21,6 +24,12 @@ public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @OneToMany(mappedBy = "courseId", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<CourseContent> courseContentList;
+
+    @OneToMany(mappedBy = "course")
+    private List<Comment> comments;
 
     @Column(nullable = false,length = 150)
     @NotNull
@@ -53,6 +62,7 @@ public class Course {
     @Enumerated(EnumType.STRING)
     @NotNull
     @Column(nullable = false, length = 50)
+
     private CategoryEnum category;
 
     @Column(nullable = false,length = 500)

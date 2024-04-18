@@ -3,7 +3,7 @@ package tech.nocountry.classlodge.course;
 public enum CategoryEnum {
     DESARROLLO_WEB,
     PROGRAMACION,
-    DISENO_GRAFICO,
+    DISENIO_GRAFICO,
     MARKETING_DIGITAL,
     FINANZAS_PERSONALES,
     IDIOMAS,

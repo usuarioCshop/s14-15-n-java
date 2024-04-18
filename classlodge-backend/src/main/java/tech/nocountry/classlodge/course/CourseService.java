@@ -1,12 +1,12 @@
 package tech.nocountry.classlodge.course;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.function.EntityResponse;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,12 +18,15 @@ public class CourseService {
 
 
 
-    public ArrayList<Course> getCourse(){
-        return (ArrayList<Course>) courseRepository.findAll();
+    public List<Course> findAll(){
+        List<Course> courses = courseRepository.findAll();
+        return courses;
     }
 
-    public Course saveCourse(Course course){
-
+    public Course save(CourseDTO courseDTO){
+        ModelMapper modelMapper = new ModelMapper();
+        Course course = modelMapper.map(courseDTO,Course.class);
+        course.setCourseContentList(null);
         return courseRepository.save(course);
     }
 
@@ -52,5 +55,7 @@ public class CourseService {
     }
 
 
-
+    public void delete(Long id) {
+            courseRepository.deleteById(id);
+    }
 }

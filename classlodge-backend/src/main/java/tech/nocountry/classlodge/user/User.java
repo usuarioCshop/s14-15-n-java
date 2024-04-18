@@ -7,9 +7,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import tech.nocountry.classlodge.comment.Comment;
+import tech.nocountry.classlodge.userContentCompleted.UserContentCompleted;
+import tech.nocountry.classlodge.userNotes.UserNote;
 
 import java.net.URL;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -42,6 +46,7 @@ public class User {
     @NotNull
     @Column(columnDefinition = "DATE")
     @Past(message = "The date must be prior to the current date")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date dob;
     @Column(length = 500)
     private URL photoUrl;
@@ -70,4 +75,13 @@ public class User {
     @Column(nullable = false,length = 100)
     @NotNull
     private String password;
+
+    @OneToMany(mappedBy = "users")
+    private List<Comment> comments;
+
+    @OneToMany(mappedBy = "users")
+    private List<UserNote> userNotes;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserContentCompleted> userContentCompleted;
 }

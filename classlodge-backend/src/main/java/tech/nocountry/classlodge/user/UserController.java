@@ -18,7 +18,7 @@ import static java.util.Objects.isNull;
 @RestController
 @RequestMapping("api/v1/user")
 @CrossOrigin(origins = "*")
-public class UserController {
+public class  UserController {
 
     private final UserService userService;
 
@@ -56,7 +56,7 @@ public class UserController {
     @PostMapping("/create")
     @Operation(summary = "This endpoint allows the creation of a user within the database")
     @Transactional
-    public ResponseEntity<?> save(@Valid @RequestBody User user, BindingResult bindingResult) {
+    public ResponseEntity<?> save(@Valid @RequestBody UserSaveDataDTO userSaveDataDTO, BindingResult bindingResult) {
         try {
             if(bindingResult.hasErrors()) {
                 StringBuilder errorMessage = new StringBuilder("Validation errors: ");
@@ -65,10 +65,10 @@ public class UserController {
                 }
                 return ResponseEntity.badRequest().body(errorMessage.toString());
             }
-            if (!this.userService.exists(user.getEmail())) {
-                return ResponseEntity.status(HttpStatus.CREATED).body(this.userService.saveUser(user));
+            if (!this.userService.exists(userSaveDataDTO.email())) {
+                return ResponseEntity.status(HttpStatus.CREATED).body(this.userService.saveUser(userSaveDataDTO));
             }
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("This email has been already registered");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already registered");
         } catch (Exception ex) {
             throw new IllegalArgumentException("Unexpect exception creating user");
         }

@@ -1,8 +1,7 @@
 package tech.nocountry.classlodge.user;
 
 public record UserDetailsDTO(
+        String fullName,
         String email,
-        String firstName,
-        String lastName,
         UserRoleEnum role
 ){}

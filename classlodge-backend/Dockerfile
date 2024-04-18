@@ -20,7 +20,7 @@ EXPOSE 8080
 
 
 # Copiar el JAR desde el contenedor de construcción al contenedor de ejecución
-COPY --from=build target/classlodge-1.jar classlodge.jar
+COPY --from=build out/artifacts/classlogde_jar/classlodge.jar classlodge.jar
 
 
 # Ejecutar la aplicación

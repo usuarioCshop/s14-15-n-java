@@ -17,7 +17,8 @@ public class UserNoteDTOMapper implements Function<UserNote, UserNoteDTO> {
         return new UserNoteDTO(
                 userNote.getDetails(),
                 userNote.getNoteContent(),
-                userNote.getDateTaken()
+                userNote.getDateTaken(),
+                userNote.getModified()
         );
     }
 }
