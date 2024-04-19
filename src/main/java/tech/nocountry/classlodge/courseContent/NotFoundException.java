@@ -1,7 +1,0 @@
-package tech.nocountry.classlodge.courseContent;
-
-public class NotFoundException extends RuntimeException {
-    public NotFoundException(String message) {
-        super(message);
-    }
-}
