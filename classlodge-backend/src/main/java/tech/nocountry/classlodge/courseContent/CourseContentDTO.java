@@ -15,8 +15,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CourseContentDTO {
+    private Long id;
     private String name;
-    private Course curse;
+    private Course course;
     private String description;
     private Integer totalHours;
     private Double price;

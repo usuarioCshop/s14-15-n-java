@@ -1,12 +1,15 @@
 package tech.nocountry.classlodge.userCertifications;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
+
+import com.itextpdf.kernel.colors.ColorConstants;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.properties.TextAlignment;
+import com.itextpdf.layout.properties.UnitValue;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,113 +51,116 @@ public class UserCertificationServiceImpl implements UserCertificationService{
         if (certifications.isEmpty()) {
             return Collections.emptyList();
         } else {
-            List<UserCertificationDTO> certificationDTOs = certifications.stream()
+            return certifications.stream()
                     .map(UserCertificationMapperDTO::toUserCertificationDTO)
                     .collect(Collectors.toList());
-            return certificationDTOs;
         }
     }
-   /* @Override
+    @Override
     public UserCertificationDTO createCertification(UserCertificationDTO userCertificationDTO) {
-        System.out.println("entra en el metodo yaaaa" );
-        // Obtener el usuario y el curso basados en los IDs proporcionados en el DTO
-        Optional<User> userOptional = userRepository.findById(String.valueOf(userCertificationDTO.user()));
-        Optional<Course> courseOptional = courseRepository.findById(Long.valueOf(userCertificationDTO.id()));
-        System.out.println("entra en el metodo " + userOptional.toString() + " " + courseOptional.toString());
-        // Verificar si tanto el usuario como el curso existen en la base de datos
+        Optional<User> userOptional = userRepository.findById((userCertificationDTO.getUserEmail()));
+        Optional<Course> courseOptional = courseRepository.findById(userCertificationDTO.getCourseId());
         if (userOptional.isPresent() && courseOptional.isPresent()) {
             User user = userOptional.get();
             Course course = courseOptional.get();
 
-            // Crear una nueva instancia de UserCertification
             UserCertification certification = new UserCertification();
-            // Asignar el usuario y el curso al objeto UserCertification
+
             certification.setUser(user);
             certification.setCourse(course);
-            certification.setStatus(userCertificationDTO.status());
-            certification.setLastAttemptDate(userCertificationDTO.lastAttemptDate());
-            certification.setRemainingAttempts(userCertificationDTO.remainingAttempts());
-            System.out.println("Se genero la certificacion + " + certification.toString());
+            certification.setStatus(userCertificationDTO.getStatus());
+            certification.setLastAttemptDate(userCertificationDTO.getLastAttemptDate());
+            certification.setRemainingAttempts(userCertificationDTO.getRemainingAttempts());
 
-            // Guardar el objeto UserCertification en la base de datos y mapear a DTO
             return UserCertificationMapperDTO.toUserCertificationDTO(userCertificationRepository.save(certification));
         } else {
-            // Lanzar una excepción si no se encuentra el usuario o el curso
-            throw new EntityNotFoundException("User or course not found with ID: " + userCertificationDTO.id());
+            throw new EntityNotFoundException("User or course not found with ID: " + userCertificationDTO);
         }
-    }*/
-
-
-
-    @Override
-    public UserCertificationDTO createCertification(UserCertificationDTO userCertificationDTO) {
-        UserCertification certification = new UserCertification();
-        certification.setUser(userCertificationDTO.user());
-        certification.setCourse(userCertificationDTO.course());
-        certification.setStatus(userCertificationDTO.status());
-        certification.setLastAttemptDate(userCertificationDTO.lastAttemptDate());
-        certification.setRemainingAttempts(userCertificationDTO.remainingAttempts());
-        return UserCertificationMapperDTO.toUserCertificationDTO(userCertificationRepository.save(certification));
     }
-    public byte[] generatePDF(UserCertificationDTO dto)  {
+
+    public UserCertificationPdfDTO getCertificationById(Long certificationId) throws Exception {
+        Optional<UserCertification> certification = userCertificationRepository.findById(certificationId);
+        if (certification.isEmpty()) {
+            throw new Exception("No se encontró la certificación con ID: " + certificationId);
+        }
+        return UserCertificationMapperDTO.toUserCertificationPdfDTO(certification.get());
+    }
+    @Override
+    public byte[] generatePDF(UserCertificationPdfDTO dto) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         PdfWriter writer = new PdfWriter(byteArrayOutputStream);
         PdfDocument pdf = new PdfDocument(writer);
         Document document = new Document(pdf);
 
-        document.add(new Paragraph("Certificado de Curso")
+        Paragraph title = new Paragraph("Certificado de Curso")
                 .setTextAlignment(TextAlignment.CENTER)
                 .setBold()
-                .setFontSize(16));
+                .setFontSize(20)
+                .setMarginBottom(20);
+        document.add(title);
 
-        Table table = new Table(new float[]{1, 2});
-        table.addCell("Usuario:");
-        table.addCell(dto.user().getFirstName());
-        table.addCell(dto.user().getLastName());
-        table.addCell("Curso:");
-        table.addCell(dto.course().getName());
-        table.addCell("Estado:");
-        table.addCell(dto.status().toString());
-        table.addCell("Fecha del último intento:");
-        table.addCell(dto.lastAttemptDate().toString());
-        table.addCell("Intentos restantes:");
-        table.addCell(String.valueOf(dto.remainingAttempts()));
+        Table table = new Table(UnitValue.createPercentArray(new float[]{1, 3}))
+                .useAllAvailableWidth()
+                .setMarginBottom(10);
+
+        addStyledCell(table, "Nombre del Usuario:", true);
+        addStyledCell(table, dto.getUserName(), false);
+        addStyledCell(table, "Correo Electrónico:", true);
+        addStyledCell(table, dto.getUserEmail(), false);
+        addStyledCell(table, "Curso:", true);
+        addStyledCell(table, dto.getCourseName(), false);
+        addStyledCell(table, "Estado:", true);
+        addStyledCell(table, dto.getStatus(), false);
+        addStyledCell(table, "Fecha del último intento:", true);
+        addStyledCell(table, dto.getLastAttemptDate().toString(), false);
+        addStyledCell(table, "Intentos restantes:", true);
+        addStyledCell(table, String.valueOf(dto.getRemainingAttempts()), false);
 
         document.add(table);
-        document.close();
+        // Añadir un pie de página si es necesario
+        Paragraph footer = new Paragraph("Este es un documento generado automáticamente, no requiere firma.")
+                .setTextAlignment(TextAlignment.CENTER)
+                .setFontSize(10)
+                .setItalic()
+                .setMarginTop(20);
+        document.add(footer);
 
+        document.close();
         return byteArrayOutputStream.toByteArray();
     }
-    public UserCertificationDTO getCertificationById(Long certificationId) throws Exception {
-        Optional<UserCertification> certification = userCertificationRepository.findById(certificationId);
-        if (!certification.isPresent()) {
-            throw new Exception("No se encontró la certificación con ID: " + certificationId);
+    private void addStyledCell(Table table, String content, boolean isHeader) {
+        Cell cell = new Cell().add(new Paragraph(content));
+        if (isHeader) {
+            cell.setBold()
+                    .setBackgroundColor(ColorConstants.LIGHT_GRAY) // Cambia el color de fondo para las cabeceras
+                    .setFontColor(ColorConstants.BLACK); // Cambia el color del texto
         }
-
-        return UserCertificationMapperDTO.toUserCertificationDTO(certification.get());
+        table.addCell(cell);
     }
 
+   @Override
+   public UserCertificationDTO updateCertification(Long id, UserCertificationDTO updatedCertificationDTO) {
+       // Find the existing UserCertification entity by id
+       UserCertification existingCertification = userCertificationRepository.findById(id)
+               .orElseThrow(() -> new EntityNotFoundException("UserCertification not found with id: " + id));
 
-    @Override
-    public UserCertificationDTO updateCertification(UserCertificationDTO userCertificationDTO) {
-        // Buscar la certificación existente por su ID
-        UserCertification existingCertification = userCertificationRepository.findById(userCertificationDTO.id())
-                .orElseThrow(() -> new EntityNotFoundException("Certification not found with ID: " + userCertificationDTO.id()));
+       // Update the existing entity with the new values
 
-        // Actualizar los campos de la certificación existente
-        existingCertification.setUser(userCertificationDTO.user());
-        existingCertification.setCourse(userCertificationDTO.course());
-        existingCertification.setStatus(userCertificationDTO.status());
-        existingCertification.setLastAttemptDate(userCertificationDTO.lastAttemptDate());
-        existingCertification.setRemainingAttempts(userCertificationDTO.remainingAttempts());
+       if(updatedCertificationDTO.getStatus() != null){
+           existingCertification.setStatus(Status.valueOf(String.valueOf(updatedCertificationDTO.getStatus())));
+       }
+       if(updatedCertificationDTO.getLastAttemptDate() != null){
+           existingCertification.setLastAttemptDate(updatedCertificationDTO.getLastAttemptDate());
+       }
+       if(updatedCertificationDTO.getRemainingAttempts() != null){
+           existingCertification.setRemainingAttempts(updatedCertificationDTO.getRemainingAttempts());
+       }
+       existingCertification = userCertificationRepository.save(existingCertification);
 
+       // Save the updated entity and map it to the DTO
+       return UserCertificationMapperDTO.toUserCertificationDTO(existingCertification);
+   }
 
-        // Guardar los cambios en la base de datos
-        UserCertification updatedCertification = userCertificationRepository.save(existingCertification);
-
-        // Convertir la certificación actualizada a DTO
-        return UserCertificationMapperDTO.toUserCertificationDTO(updatedCertification);
-    }
 
     @Override
     public void deleteAllCertifications(String userEmail) {

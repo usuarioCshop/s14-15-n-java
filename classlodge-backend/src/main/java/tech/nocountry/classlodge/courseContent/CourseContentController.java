@@ -38,9 +38,9 @@ public class  CourseContentController {
             content = @Content(mediaType = "application/json",
             schema = @Schema(implementation = CourseContent.class)))
     @ApiResponse(responseCode = "404", description = "Recurso no encontrado", content = @Content)
-     @PostMapping
-    public ResponseEntity<?> createCourseContent(@Valid BindingResult bindingResult,
-                                                 @RequestBody ContentPostDTO request){
+     @PostMapping()
+    public ResponseEntity<?> createCourseContent(@Valid
+                                                 @RequestBody ContentPostDTO request,BindingResult bindingResult){
         try {
             if(bindingResult.hasErrors()){
                 return ResponseEntity.badRequest().body(bindingResult.getFieldError());
