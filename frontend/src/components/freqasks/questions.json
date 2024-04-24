@@ -1,0 +1,28 @@
+[
+    {
+      "id": 1,
+      "pregunta": "Cuáles son los métodos de pago aceptados en su plataforma?",
+      "respuesta": "En nuestra plataforma, aceptamos pagos a través de MercadoPago, una plataforma de pago segura y confiable que permite transacciones seguras con tarjetas de crédito, débito, transferencias bancarias y otros métodos locales de pago disponibles en su país."
+    },
+    {
+      "id": 2,
+      "pregunta": "Cómo puedo acceder al curso después de realizar el pago?",
+      "respuesta": "Una vez que hayas completado el proceso de pago a través de MercadoPago, recibirás un correo electrónico de confirmación con detalles de tu compra. Además, podrás acceder al curso directamente desde tu cuenta en nuestro sitio web. Simplemente inicia sesión con las credenciales que proporcionaste al registrarte y encontrarás el curso en tu biblioteca personal."
+    },
+    {
+      "id": 3,
+      "pregunta": "Qué sucede si tengo algún problema con el proceso de pago?",
+      "respuesta": "Si experimentas algún problema durante el proceso de pago, te recomendamos que primero verifiques los detalles de tu tarjeta de crédito o débito para asegurarte de que la información ingresada sea correcta. Si el problema persiste, ponte en contacto con nuestro equipo de soporte técnico a través de correo electrónico o mediante nuestro formulario de contacto en el sitio web. Estaremos encantados de ayudarte a resolver cualquier problema que puedas tener."
+    },
+    {
+      "id": 4,
+      "pregunta": "Ofrecen algún tipo de reembolso si no estoy satisfecho con el curso?",
+      "respuesta": "Sí, entendemos que la satisfacción del estudiante es fundamental. Por lo tanto, ofrecemos una garantía de satisfacción del 100%. Si no estás completamente satisfecho con tu compra, ponte en contacto con nosotros dentro de los primeros 30 días posteriores a la compra y te reembolsaremos el monto total pagado sin hacer preguntas."
+    },
+    {
+      "id": 5,
+      "pregunta": "Cómo puedo obtener una factura por mi compra?",
+      "respuesta": "Para obtener una factura por tu compra, simplemente ponte en contacto con nuestro equipo de soporte después de realizar el pago y proporciona los detalles necesarios, como tu nombre completo, dirección de correo electrónico y cualquier información adicional requerida para la factura. Estaremos encantados de proporcionarte una factura con todos los detalles necesarios para tu contabilidad."
+    }
+]
+  

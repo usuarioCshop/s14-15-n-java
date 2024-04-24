@@ -1,0 +1,56 @@
+.cardBody{   
+    padding: 0 0.5rem 0 0.5rem;
+}
+
+.contenedor{
+    display: grid;
+    gap: 3px;
+    grid-template-areas: 
+    "barras barras barras numero"
+    "barras barras barras numero"
+    "barras barras barras numero"
+    "barras barras barras estrellas"
+    "barras barras barras estrellas"
+    "detalle detalle detalle detalle"   
+    ;
+    height: 320px;
+    width: auto;
+}
+
+.barras{
+    grid-area: barras;
+    width: 150px;
+    display:  flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.barras p{
+    font-size: small;
+    display: flex;
+    align-items: center;
+    color: white;
+}
+
+.barras p span{
+    margin-right: 5px;   
+}
+.numero{
+    grid-area: numero;
+    font-size: 30pt;
+    margin: auto;
+    color: white;
+    font-weight: bold;
+}
+.estrellas{
+    grid-area: estrellas;
+    display: flex;
+    align-items: center;
+}
+
+.detalle{
+    grid-area: detalle;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
